@@ -22,59 +22,105 @@ const renderProductos = (req, res) => {
 const renderNuevoProducto = (req, res) => {
     res.render('nuevoProducto', { errors: [] });
 }
+// const loginSesion = async (req, res) => {
+//     const { email, contraseña } = req.body;
+
+//     try {
+//         const user = await usuario.findOne({ where: { email } });
+
+//         if (!user) {
+//             return res.status(404).send('Usuario no encontrado');
+//         }
+
+//         const passwordMatch = await bcrypt.compare(contraseña, user.contraseña);
+
+//         if (passwordMatch) {
+//             console.log('Contraseña correcta');
+//             req.session.usuario = user;
+//             res.render('perfil', { usuario: user }); // Pasar el usuario como variable a la vista
+//         } else {
+//             console.log('Contraseña incorrecta');
+//             res.status(401).send('Contraseña incorrecta');
+//         }
+//     } catch (error) {
+//         console.error(error);
+//         res.status(500).send('Error al autenticar usuario');
+//     }
+// };
 const loginSesion = async (req, res) => {
     const { email, contraseña } = req.body;
-
+  
     try {
-        const user = await usuario.findOne({ where: { email } });
-
-        if (!user) {
-            return res.status(404).send('Usuario no encontrado');
-        }
-
-        const passwordMatch = await bcrypt.compare(contraseña, user.contraseña);
-
-        if (passwordMatch) {
-            console.log('Contraseña correcta');
-            req.session.usuario = user;
-            res.render('perfil', { usuario: user }); // Pasar el usuario como variable a la vista
-        } else {
-            console.log('Contraseña incorrecta');
-            res.status(401).send('Contraseña incorrecta');
-        }
+      const user = await usuario.findOne({ where: { email } });
+  
+      if (!user) {
+        return res.status(404).json({ error: 'Usuario no encontrado' });
+      }
+  
+      const passwordMatch = await bcrypt.compare(contraseña, user.contraseña);
+  
+      if (passwordMatch) {
+        // Aquí puedes devolver información del usuario autenticado en JSON
+        res.status(200).json({ usuario: user });
+      } else {
+        res.status(401).json({ error: 'Contraseña incorrecta' });
+      }
     } catch (error) {
-        console.error(error);
-        res.status(500).send('Error al autenticar usuario');
+      console.error(error);
+      res.status(500).json({ error: 'Error al autenticar usuario' });
     }
-};
-
+  };
+  
 // creo el registro 
+// const createUser = async (req, res) => {
+//     /* cambie el nombre de los campos nombre y contraseña, y agregue el ccampo del telefono*/
+//     const { nombre, email, contraseña, username, fec_nac ,telefono} = req.body;
+//     try {
+
+//         const saltRounds = 10;
+//         const hashedPassword = await bcrypt.hash(contraseña, saltRounds);
+
+//         const newUser = await usuario.create({
+//             nombre,
+//             email,
+//             contraseña: hashedPassword,
+//             username,
+//             fec_nac,
+//             telefono
+//         });
+
+//         console.log("Usuario creado con éxito")
+//         res.status(200).json(newUser);
+
+//     } catch (e) {
+//         console.log(e);
+//         res.status(500).send("Error al crear un usuario");
+//     }
+// }
 const createUser = async (req, res) => {
-    /* cambie el nombre de los campos nombre y contraseña, y agregue el ccampo del telefono*/
-    const { nombre, email, contraseña, username, fec_nac ,telefono} = req.body;
+    /* Cambié el nombre de los campos nombre y contraseña y agregué el campo del teléfono */
+    const { nombre, email, contraseña, username, fec_nac, telefono } = req.body;
     try {
-
-        const saltRounds = 10;
-        const hashedPassword = await bcrypt.hash(contraseña, saltRounds);
-
-        const newUser = await usuario.create({
-            nombre,
-            email,
-            contraseña: hashedPassword,
-            username,
-            fec_nac,
-            telefono
-        });
-
-        console.log("Usuario creado con éxito")
-        res.status(200).json(newUser);
-
+      const saltRounds = 10;
+      const hashedPassword = await bcrypt.hash(contraseña, saltRounds);
+  
+      const newUser = await usuario.create({
+        nombre,
+        email,
+        contraseña: hashedPassword,
+        username,
+        fec_nac,
+        telefono,
+      });
+  
+      console.log("Usuario creado con éxito");
+      res.status(200).json(newUser);
     } catch (e) {
-        console.log(e);
-        res.status(500).send("Error al crear un usuario");
+      console.error(e);
+      res.status(500).json({ error: "Error al crear un usuario" });
     }
-}
-
+  }
+  
 
 //leo los registros
 
@@ -145,25 +191,24 @@ const deleteUser = async (req, res) => {
 // creo un producto nuevo
 
 const createProduct = async (req, res) => {
-    //console.log("Request Body:", req.body);
     try {
-        const { nombre, descripcion, precio,imagen } = req.body;
-        console.log(req.body);
-        const newProduct = await producto.create({
-            nombre,
-            descripcion,
-            precio,
-            imagen
-        });
-        console.log("Producto Creado con éxito");
-        const products = await producto.findAll();
-        res.status(200).json(newProduct)
-        //res.render('productos', { products});
+      const { nombre, descripcion, precio, imagen } = req.body;
+      console.log(req.body);
+      const newProduct = await producto.create({
+        nombre,
+        descripcion,
+        precio,
+        imagen // Guarda la URL de la imagen en la base de datos
+      });
+      console.log("Producto Creado con éxito");
+      const products = await producto.findAll();
+      res.status(200).json(newProduct);
     } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: "Error al crear el producto"});
+      console.error(err);
+      res.status(500).json({ error: "Error al crear el producto" });
     }
-};
+  };
+  
 
 // Función para obtener todos los productos
 const getProduct = async (req, res) => {

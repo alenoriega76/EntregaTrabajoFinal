@@ -3,9 +3,15 @@ const app = express();
 const cors = require('cors');
 const session= require ('express-session');
 const {Sequelize}= require('./db/sequelize')
-
 const port= 4000;
-app.use(cors());
+
+const corsOptions = {
+    origin: 'http://localhost:5173', 
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    allowedHeaders: 'Content-Type,Authorization',
+  };
+
+app.use(cors(corsOptions));
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
 app.use(express.json());
