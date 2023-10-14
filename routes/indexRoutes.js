@@ -20,19 +20,16 @@ router.post('/register', validate,createUser);
 router.get('/', renderIndex);
 // rutas para productos CRUD
 router.get('/products',getProduct);
-router.get('/products/new',isAdmin,renderNuevoProducto)
-router.post('/products', isAdmin,createProduct);
-router.delete('/products/:id', isAdmin,deleteProduct);
-router.put('/products/:id',isAdmin, updateProduct);
-router.get('/products/:id',isAdmin, obtenerProductoId);
+router.get('/products/new',renderNuevoProducto)
+router.post('/products',createProduct);
+router.delete('/products/:id',deleteProduct);
+router.put('/products/:id', updateProduct);
+router.get('/products/:id', obtenerProductoId);
 
 // rutas para usuarios CRUD
 router.get('/usuarios', getUser);
 router.get('/usuarios/:id',obtenerUsuarioId)
 router.put('/usuarios/edit/:id',updateUser);
 router.delete('/usuarios/delete/:id',deleteUser);
-router.get('/admin/users', isAdmin, (req, res) => {
-       res.send('Página de administración de usuarios');
-     });
 
 module.exports = router;

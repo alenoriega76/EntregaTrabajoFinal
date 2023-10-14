@@ -18,13 +18,13 @@ const producto= Sequelize.define('productos',{
     },
     
     id_categoria:{
-        type:DataTypes.INTEGER,
+        type:DataTypes.STRING,
     },
     imagen: {
         type: DataTypes.STRING, // Usamos BLOB para almacenar imágenes binarias
     },
     rating:{
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
     }
 }, {
     timestamps: false 

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Agregar Nuevo Producto</title>
+    <!-- Enlace a tus estilos CSS -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <% if(errors){%>
+        <% errors.forEach(error =>{ %>
+            <h2> <%= error.msg %> </h2> 
+       <% } )%>
+
+    <%}%>
+    <h1>Agregar Nuevo Producto</h1>
+    <form action="/products" method="POST" >
+        <label for="nombre">Nombre del Producto:</label>
+        <input type="text" id="nombre" name="nombre" required>
+        
+        <label for="descripcion">Descripción del Producto:</label>
+        <textarea id="descripcion" name="descripcion" rows="4" required></textarea>
+        
+        <label for="precio">Precio del Producto:</label>
+        <input type="number" id="precio" name="precio" step="0.01" required>
+        
+        <label for="imagen">Imagen del Producto:</label>
+        <input type="url" id="imagen" name="imagen" accept="image/*" required>
+        
+        <button type="submit">Agregar Producto</button>
+    </form>
+</body>
+</html>

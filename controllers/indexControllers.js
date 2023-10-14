@@ -5,13 +5,14 @@ const producto = require("../model/productModel");
 const usuario = require("../model/userModel");
 const pedido=require('../model/pedidosModel');
 const Sequelize = require("../db/sequelize");
+const isAdmin = require("../middleware/isAdmin");
 
 // pagina inicio
 const renderIndex = (req, res) => {
     res.render('index');
 };
 const renderLogin = (req, res) => {
-    res.render('login', { errors: [] });
+    res.render('login',{ errors: [] });
 };
 const renderRegister = (req, res) => {
     res.render('register', { errors: [] });
@@ -192,13 +193,14 @@ const deleteUser = async (req, res) => {
 
 const createProduct = async (req, res) => {
     try {
-      const { nombre, descripcion, precio, imagen } = req.body;
+      const { nombre, descripcion, precio, imagen ,id_categoria} = req.body;
       console.log(req.body);
       const newProduct = await producto.create({
         nombre,
         descripcion,
         precio,
-        imagen // Guarda la URL de la imagen en la base de datos
+        imagen,
+        id_categoria
       });
       console.log("Producto Creado con éxito");
       const products = await producto.findAll();
@@ -225,7 +227,7 @@ const getProduct = async (req, res) => {
 const updateProduct = async (req, res) => {
     try {
         const { id } = req.params;
-        const { nombre, descripcion, precio,imagen } = req.body;
+        const { nombre, descripcion, precio,imagen,id_categoria } = req.body;
         const product = await producto.findByPk(id);
         if (!product) {
             return res.status(404).json({ error: "Producto no encontrado" });
@@ -234,6 +236,7 @@ const updateProduct = async (req, res) => {
         product.descripcion = descripcion;
         product.precio = precio;
         product.imagen=imagen;
+        product.id_categoria=id_categoria;
         await product.save();
         res.status(200).json(product);
     } catch (err) {
