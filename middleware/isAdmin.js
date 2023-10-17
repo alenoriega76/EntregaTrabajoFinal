@@ -1,4 +1,3 @@
-// middleware/isAdmin.js
 const isAdmin = (req, res, next) => {
   const user = req.session.usuarios; // Asume que el usuario se almacena en la sesión
 
